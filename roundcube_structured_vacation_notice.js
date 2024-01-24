@@ -15,11 +15,6 @@ window.rcmail && rcmail.addEventListener('init', function(evt) {
 
     // When recipients are added during email composition, send them to the backen to check if they have any OOF data
     rcmail.addEventListener('add-recipient', rcmail.check_recipients_for_oof);
-
-    if (rcmail.task === 'mail') {
-        // Render the structured data for a message when displaying it
-        rcmail.render_structured_data();
-    }
 });
 
 // A global variable which is meant to hold the username of the current user, logged into RC

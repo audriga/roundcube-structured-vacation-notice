@@ -141,53 +141,8 @@ class roundcube_structured_vacation_notice extends rcube_plugin
         // The type of a trusted sender, we'll need it below
         $trustedSenderType = rcube_addressbook::TYPE_TRUSTED_SENDER;
 
-        /**
-         * Check if we have email markup and if
-         * the address of the message's sender is not empty
-         */
-        if (isset($jsonLd) && !empty($jsonLd) && !empty($messageSender)) {
-            /**
-             * If the sender doesn't exist as a trusted sender,
-             * add a button to make them a trusted sender
-             */
-            if (!$rcmail->contact_exists($messageSender, $trustedSenderType)) {
-                $msg = html::span(
-                    null,
-                    rcube::Q(
-                        'This message contains structured email data.'
-                    )
-                );
-                $button = html::a(
-                    [
-                        'href' => "#loadremotealways",
-                        'onclick' =>
-                            rcmail_output::JS_OBJECT_NAME
-                            . ".add_contact('$messageSender', true, "
-                            . "$trustedSenderType);"
-                            
-                            . rcmail_output::JS_OBJECT_NAME
-                            . ".show_message(rcmail.env.uid, true,"
-                            . " rcmail.env.action == 'preview');"
-
-                            . "rcmail.unhide_message_list_buttons(rcmail.env.uid);",
-                        'style' => "white-space:nowrap"
-                    ],
-                    rcube::Q(
-                        "Allow structured email content"
-                        . " and make sender a trusted sender"
-                    )
-                );
-                $attrib['id'] = 'structured-data-message';
-                $attrib['class'] = 'notice';
-                $div = html::div(
-                    $attrib,
-                    $msg . '&nbsp;' . html::span('boxbuttons', $button)
-                );
-
-                array_push($content, $div);
-            }
-        }
-
+        
+        
         $showStructuredEmailForTrustedSenders = $rcmail->config->get(
             'showStructuredEmailForTrustedSenders',
             false

@@ -1,0 +1,28 @@
+{
+    "name": "audriga/roundcube-structured-vacation-notice",
+    "description": "A Roundcube plugin for proccessing structured Vacation Notic data",
+    "type": "roundcube-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Stanimir Bozhilov",
+            "email": "stanimir@audriga.com"
+        },
+        {
+            "name": "Lukas Frank",
+            "email": "lukas@audriga.com"
+        },
+        {
+            "name": "Hans-Joerg Happel",
+            "email": "hans-joerg@audriga.com"
+        }
+    ],
+    "require": {
+        "roundcube/plugin-installer": "^0.3.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "roundcube/plugin-installer": true
+        }
+    }
+}

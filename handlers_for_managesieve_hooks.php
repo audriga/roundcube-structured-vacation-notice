@@ -111,7 +111,7 @@ class handlers_for_managesieve_hooks
 
         // NOW WE HAVE AN HTML VERSION WE CAN ATTACH THE JSON TO FOR SURE
         $include_structured_data = rcube_utils::get_input_value('include_structured_data', rcube_utils::INPUT_POST);
-        $include_structured_data_email = rcube_utils::get_input_value('include_structured_data', rcube_utils::INPUT_POST);
+        $include_structured_email = rcube_utils::get_input_value('include_structured_email', rcube_utils::INPUT_POST);
         $structured_data_send_before = rcube_utils::get_input_string('structured_data_send_before', rcube_utils::INPUT_POST);
         
         // TODO access these values through parameters the hook is given
@@ -128,7 +128,7 @@ class handlers_for_managesieve_hooks
         $rcmail->user->save_prefs(
             [   
                 'include_structured_data_in_vacation_notice' => $include_structured_data,
-                'include_structured_data_in_email' => $include_structured_data_email,
+                'include_structured_data_in_email' => $include_structured_email,
                 'days_prior_include_structured_data_in_email' => $structured_data_send_before
             ]
         );

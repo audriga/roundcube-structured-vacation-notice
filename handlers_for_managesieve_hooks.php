@@ -10,8 +10,8 @@ class handlers_for_managesieve_hooks
         $rcmail = rcmail::get_instance();
         $user_prefs = $rcmail->user->get_prefs();
         // Raw inputs
-        $add_structured_data_in_email = $user_prefs['include_structured_data_in_vacation_notice'];
-        $add_structured_data_in_oof = $user_prefs['include_structured_data_in_email'];
+        $add_structured_data_in_oof = $user_prefs['include_structured_data_in_vacation_notice'];
+        $add_structured_data_in_email = $user_prefs['include_structured_data_in_email'];
         $days_prior = $user_prefs['days_prior_include_structured_data_in_email'];
         
         // Validated inputs

@@ -111,7 +111,7 @@ class handlers_for_managesieve_hooks
 
         // NOW WE HAVE AN HTML VERSION WE CAN ATTACH THE JSON TO FOR SURE
         $include_structured_data = rcube_utils::get_input_value('include_structured_data', rcube_utils::INPUT_POST);
-        $include_structured_email = rcube_utils::get_input_value('include_structured_email', rcube_utils::INPUT_POST);
+        $include_structured_email = rcube_utils::get_input_value('include_structured_data_email', rcube_utils::INPUT_POST);
         $structured_data_send_before = rcube_utils::get_input_string('structured_data_send_before', rcube_utils::INPUT_POST);
         
         // TODO access these values through parameters the hook is given

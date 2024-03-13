@@ -148,37 +148,40 @@ class roundcube_structured_vacation_notice extends rcube_plugin
             false
         );
 
+       
+       
         /**
          * Only show structured email data if:
          * * our config flag allows it
          * * and the sender is a trusted one
          */
         if ($showStructuredEmailForTrustedSenders
+            && $contextType == "outOfOffice"
             && $rcmail->contact_exists($messageSender, $trustedSenderType)
-        ) {
-            // Set Dummy name & topic (no UI component yet)
-            $replacement_name = 'John Doe';
-            $replacement_topic = 'customer support';
+            ) 
+        {
+            
+            // Decode jsonLd for our banner 
+            $decoded_jsonLd = json_decode($jsonLd);
+            
+        
+            $replacement_name = $decoded_jsonLd->replacement[0]->name;
+            $replacement_topic = $decoded_jsonLd->replacement[0]->topic;
 
-           // Decode jsonLd for our banner 
-           $decoded_jsonLd = json_decode($jsonLd);
-
-           $start = $decoded_jsonLd->start;
-           $end = $decoded_jsonLd->end;
-           $replacement_email = $decoded_jsonLd->replacement[0]->email;
-           // How we would access the name and topic if they were set (can't be set through ui currently)
-           //$replacement_name = $decoded_jsonLd->replacement[0]->name;           
-           //$replacement_topic = $decoded_jsonLd->replacement[0]->topic;
+            $start = $decoded_jsonLd->start->date;
+            $end = $decoded_jsonLd->end->date;
+            $replacement_email = $decoded_jsonLd->replacement[0]->email;
             
             // OUTPUT Banner similar to the "remote-objects-message"
-            // TODO only show the parameters which are set
+
             $html = '<div id="oof-message-box" style="background-color:rgba(255,212,82,.2);" class="ui alert alert-warning boxwarning">';
             $html .= '<i class="icon"></i>';
             $html .= '<span>The user is out-of-office from ' . $start . ' till ' . $end . ' mails will not be forwarded.';
             $html .= ' During absence, contact ' . $replacement_name . ' regarding ' . $replacement_topic . ' under ' . $replacement_email . '.</span>';
             $html .= '</div>';
             array_push($content, $html);
-            }    
+        }
+
         return array('content' => $content);
     }
 }

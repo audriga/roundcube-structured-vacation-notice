@@ -337,20 +337,25 @@ class oof_util
         $now = new DateTime();
         
         $user_prefs = $rcmail->user->get_prefs();
-        $add_structured_data = $user_prefs['include_structured_data_in_email'];
-        $days_prior = $user_prefs['days_prior_include_structured_data_in_email'];
-        $now_plus_days_prior = (new DateTime())->modify("+$days_prior days");
+        $add_structured_data_in_email = $user_prefs['include_structured_data_in_email'];
+        $days_prior = 0;
+
+        // Check if we have a integer
+        if(intval(isset($user_prefs['days_prior_include_structured_data_in_email']))!= 0)
+            $days_prior = $user_prefs['days_prior_include_structured_data_in_email'];
+
+        // Calculating when to start sending or replying messages
+        $now_minus_days_prior = (new DateTime())->modify("- {$days_prior} day");
 
         /*
          * Add OOF structured data iff the user prefs allow us and
          * the current time is within the time period during
          * which the structured data should be added to the email
          */
-        if (isset($add_structured_data)
-            && $add_structured_data
-            && isset($days_prior) && is_numeric($days_prior)
-            && $now_plus_days_prior >= $vacation['start']
-            && $vacation['start'] > $now
+        if (isset($add_structured_data_in_email)
+            && $add_structured_data_in_email =="on"
+            && $now_minus_days_prior >= $vacation['start']
+            && $now <= $vacation["end"]
         ) {
             $structured_data = [
                 '@context' => 'https://schema.org',
@@ -382,7 +387,7 @@ class oof_util
                 . $htmlBody;
             $message->setHTMLBody($htmlBody);
             $args['message'] = $message;
-            rcmail::console('message :'. $message);
+            // rcmail::console('message :'. $message);
         
             return $args;
 

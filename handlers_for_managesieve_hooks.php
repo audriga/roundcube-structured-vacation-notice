@@ -3,14 +3,41 @@
 class handlers_for_managesieve_hooks 
 {
     public static function on_vacation_form_advanced_hook_oof($args) 
-    {
+    {   
+
+
+        // Get the settings to preset the fields and checkboxes
+        $rcmail = rcmail::get_instance();
+        $user_prefs = $rcmail->user->get_prefs();
+        // Raw inputs
+        $add_structured_data_in_oof = $user_prefs['include_structured_data_in_vacation_notice'];
+        $add_structured_data_in_email = $user_prefs['include_structured_data_in_email'];
+        $days_prior = $user_prefs['days_prior_include_structured_data_in_email'];
+        
+        // Validated inputs
+        $do_days_prior = "";
+        $do_add_structured_data_in_email = false;
+        $do_add_structured_data_in_oof = false;
+
+        // setting boolean flags for the html elements
+        if(isset($add_structured_data_in_email) && $add_structured_data_in_email == "on"){
+            $do_add_structured_data_in_email = true;
+        }
+        if(isset($add_structured_data_in_oof) && $add_structured_data_in_oof == "on" ){
+            $do_add_structured_data_in_oof = true;
+        }
+        if(isset($days_prior)){
+            $do_days_prior = $days_prior;
+        }
+
         $structured_data_in_vacation_notice_checkbox = new html_inputfield(
 
             [   
                 'type' => 'checkbox',
                 'name' => 'include_structured_data',
                 'id' => 'structured_data_in_vacation_notice_checkbox',   
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'checked' => $do_add_structured_data_in_oof
             ]
         ); 
     
@@ -20,7 +47,8 @@ class handlers_for_managesieve_hooks
                 'type' => 'checkbox',
                 'name' => 'include_structured_data_email',    
                 'id' => 'structured_data_in_email_checkbox',
-                'class' => 'form-control' 
+                'class' => 'form-control',
+                'checked' => $do_add_structured_data_in_email
             ] 
         );   
     
@@ -29,13 +57,10 @@ class handlers_for_managesieve_hooks
                 'name' => 'structured_data_send_before',
                 'id' => 'structured_data_send_before',
                 'size' => 5,
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'value' => $do_days_prior
             ]
         );
-        
-
-        // Advanced tab
-        $rcmail = rcmail::get_instance();
 
         $table = $args['table'];
         $table->add('title', html::label('structured_data_in_vacation_notice_checkbox', $rcmail->gettext('roundcube_structured_vacation_notice.includeinvacationnotice')));
@@ -85,9 +110,8 @@ class handlers_for_managesieve_hooks
         }
 
         // NOW WE HAVE AN HTML VERSION WE CAN ATTACH THE JSON TO FOR SURE
-        
-        $include_structured_data = rcube_utils::get_input_string('include_structured_data', rcube_utils::INPUT_POST);
-        $include_structured_data_email = rcube_utils::get_input_string('include_structured_data', rcube_utils::INPUT_POST);
+        $include_structured_data = rcube_utils::get_input_value('include_structured_data', rcube_utils::INPUT_POST);
+        $include_structured_email = rcube_utils::get_input_value('include_structured_data_email', rcube_utils::INPUT_POST);
         $structured_data_send_before = rcube_utils::get_input_string('structured_data_send_before', rcube_utils::INPUT_POST);
         
         // TODO access these values through parameters the hook is given
@@ -104,7 +128,7 @@ class handlers_for_managesieve_hooks
         $rcmail->user->save_prefs(
             [   
                 'include_structured_data_in_vacation_notice' => $include_structured_data,
-                'include_structured_data_in_email' => $include_structured_data_email,
+                'include_structured_data_in_email' => $include_structured_email,
                 'days_prior_include_structured_data_in_email' => $structured_data_send_before
             ]
         );
